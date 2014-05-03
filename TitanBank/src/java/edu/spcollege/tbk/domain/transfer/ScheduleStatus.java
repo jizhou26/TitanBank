@@ -4,15 +4,13 @@
  * and open the template in the editor.
  */
 
-package edu.spcollege.tbk.domain;
+package edu.spcollege.tbk.domain.transfer;
 
 /**
  *
  * @author Zhou
  */
-public class InsufficientFundsException extends Exception {
-    
-    public InsufficientFundsException() {
-        super("Error: Insufficient Funds in account.");
-    }
+public enum ScheduleStatus {
+    IMMEDIATE,
+    FUTURE
 }

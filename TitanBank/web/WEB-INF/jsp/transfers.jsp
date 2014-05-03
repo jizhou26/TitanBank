@@ -4,26 +4,22 @@
     Author     : Zhou
 --%>
 
-<%@page import="edu.spcollege.tbk.domain.*, java.util.List"%>
+<%@page import="edu.spcollege.tbk.domain.*, edu.spcollege.tbk.domain.bankaccount.*, edu.spcollege.tbk.domain.transfer.*, java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML>
 
-<%! String username = ""; %>
+<%! List<BankAccount> bankAccounts; %>
 <%
-    username = (String) session.getAttribute("username");
-    
-    UserRepository userRepo = new UserRepository();
-    User user = userRepo.findByUsername(username);
-    
-    BankAccountRepository bankAcctRepo = new BankAccountRepository();
-    List<BankAccount> bankAccounts = bankAcctRepo.findByUser(user);
+    bankAccounts = (List<BankAccount>) request.getAttribute("bankAccounts");
 %>
 
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Titan Bank: Transfers</title>
+<%--        <script src="../js/transfers.js" type="text/javascript"></script> --%>
         <script type="text/javascript">
+            window.onload = initRequestForm;
             function initRequestForm() {
                 var transferRequestForm = document.getElementById("transferRequestForm");
                 var from = document.getElementById("fromAccount");
@@ -72,13 +68,13 @@
         </script>
     </head>
     
-    <body onload="initRequestForm()">
+    <body>
         <jsp:include page="stdnav.jsp" />
         
         <div class="main">
             <h2>Transfers</h2>
             <div>
-            <form action="transferService.htm" method="post" id="transferRequestForm">
+            <form action="transfersList" method="post" id="transferRequestForm">
                 <fieldset>
                     <legend>Transfer Request</legend>
                     <div>
@@ -87,7 +83,7 @@
                             <option>Select your account...</option>
 <%
                             for (BankAccount account : bankAccounts) {
-                                out.println("<option value=\"" + account.getAccountName() + "\">" + account.getAccountName()  +  "</option>");
+                                out.println("<option value=\"" + account.getAccountNumber() + "\">" + account.getAccountName()  +  "</option>");
                             }
 %>
                         </select>
@@ -98,7 +94,7 @@
                             <option>Select your account...</option>
 <%
                             for (BankAccount account : bankAccounts) {
-                                out.println("<option value=\"" + account.getAccountName() + "\">" + account.getAccountName()  +  "</option>");
+                                out.println("<option value=\"" + account.getAccountNumber() + "\">" + account.getAccountName()  +  "</option>");
                             }
 %>
                         </select>
@@ -111,8 +107,8 @@
                         <label for="sendOn">Send On: </label>
                         <select name="sendOn" id="sendOn">
 <%
-                            out.println("<option value=\"" + TransferRequest.ScheduleStatus.IMMEDIATE + "\">" + TransferRequest.ScheduleStatus.IMMEDIATE.toString()  +  "</option>");
-                            out.println("<option value=\"" + TransferRequest.ScheduleStatus.FUTURE + "\">" + TransferRequest.ScheduleStatus.FUTURE.toString()  +  "</option>");
+                            out.println("<option value=\"" + ScheduleStatus.IMMEDIATE + "\">" + ScheduleStatus.IMMEDIATE.toString()  +  "</option>");
+                            out.println("<option value=\"" + ScheduleStatus.FUTURE + "\">" + ScheduleStatus.FUTURE.toString()  +  "</option>");
 %>
                         </select>
                     </div>

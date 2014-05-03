@@ -4,9 +4,9 @@
  * and open the template in the editor.
  */
 
-package edu.spcollege.tbk.domain;
-
-import java.util.ArrayList;
+package edu.spcollege.tbk.domain.transfer;
+import edu.spcollege.tbk.domain.Customer;
+import edu.spcollege.tbk.domain.bankaccount.InsufficientFundsException;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
@@ -18,16 +18,19 @@ import java.util.logging.Logger;
  */
 public class TransferService {
     
-    private ArrayList<TransferRequest> transactions;
+    private TransferRepository transferRepo;
+//    private List<TransferRequest> transactions;
     
     // Constructor
     public TransferService() {
-        this.transactions = new ArrayList<>();
+        this.transferRepo = new TransferRepository();
+//        this.transactions = new TransferRepository().findAll();
     }
     
     public void transfer(TransferRequest transferRequest) {
         if (!transferRequest.isReadyToTransfer()) {
-            this.transactions.add(transferRequest);
+            this.transferRepo.save(transferRequest);
+//            this.transactions.add(transferRequest);
             return;
         }
 
@@ -35,17 +38,25 @@ public class TransferService {
             transferRequest.getFromAccount().withdraw(transferRequest.getAmount());
             transferRequest.getToAccount().deposit(transferRequest.getAmount());
             transferRequest.completeTransaction();
-            this.transactions.add(transferRequest);
+            this.transferRepo.save(transferRequest);
+//            this.transactions.add(transferRequest);
         } catch (InsufficientFundsException ex) {
             Logger.getLogger(TransferService.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
     public List<TransferRequest> getTransactions(){
-        return Collections.unmodifiableList(this.transactions);
+        return this.transferRepo.findAll();
+    }
+
+    public List<TransferRequest> getTransactionsByCustomer(Customer customer){
+        return this.transferRepo.findByCustomer(customer);
     }
     
-    public List<TransferRequest> getTransactions(TransferRequest.TransferStatus status){
+    
+    
+    /*
+    public List<TransferRequest> getTransactions(TransferStatus status){
         ArrayList<TransferRequest> results = new ArrayList<>();
         for (TransferRequest request: transactions){
             if (request.getTransferStatus() == status)
@@ -53,17 +64,7 @@ public class TransferService {
         }
         return Collections.unmodifiableList(results);
     }
+    */
     
-    public List<TransferRequest> getTransactions(User user){
-        ArrayList<TransferRequest> results = new ArrayList<>();
-        
-        for (TransferRequest request: transactions){
-            if (request.getFromAccount().getCustomer().equals(user.getCustomer()) ||
-                    request.getToAccount().getCustomer().equals(user.getCustomer()))
-            {
-                results.add(request);
-            }
-        }
-        return Collections.unmodifiableList(results);
-    }
+    
 }

@@ -4,12 +4,15 @@
  * and open the template in the editor.
  */
 
-package edu.spcollege.tbk.domain;
+package edu.spcollege.tbk.domain.bankaccount;
 
 /**
  *
  * @author Zhou
  */
-public interface IUserRepository {
-    User findByUsername(String username);
+public class InsufficientFundsException extends Exception {
+    
+    public InsufficientFundsException() {
+        super("Error: Insufficient Funds in account.");
+    }
 }

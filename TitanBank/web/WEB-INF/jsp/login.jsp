@@ -13,7 +13,7 @@
     </head>
     <body>
         <h1>Welcome to Titan Bank!</h1>
-        <form action="loginCheck.htm" method="post" id="loginForm">
+        <form action="userLogin?option=login" method="post" id="loginForm">
             <fieldset>
                 <legend>Log in</legend>
                 <div>

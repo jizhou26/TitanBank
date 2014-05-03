@@ -6,6 +6,8 @@
 
 package edu.spcollege.tbk.domain;
 
+import edu.spcollege.tbk.domain.user.IUserRepository;
+import edu.spcollege.tbk.domain.user.User;
 import java.util.ArrayList;
 
 /**

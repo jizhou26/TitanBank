@@ -4,8 +4,10 @@
  * and open the template in the editor.
  */
 
-package edu.spcollege.tbk.domain;
+package edu.spcollege.tbk.domain.bankaccount;
 
+import edu.spcollege.tbk.domain.Customer;
+import edu.spcollege.tbk.domain.user.User;
 import java.util.List;
 
 /**
@@ -16,4 +18,5 @@ public interface IBankAccountRepository {
     List<BankAccount> findByUser(User user);
     List<BankAccount> findByCustomer(Customer customer);
     BankAccount findByAccountNumber(String accountNumber);
+    void save(BankAccount bankAccount);
 }

@@ -6,20 +6,18 @@
 
 package edu.spcollege.tbk.controller;
 
-import edu.spcollege.tbk.domain.*;
+import edu.spcollege.tbk.domain.bankaccount.BankAccountRepository;
+import edu.spcollege.tbk.domain.bankaccount.BankAccount;
+import edu.spcollege.tbk.domain.user.UserRepository;
+import edu.spcollege.tbk.domain.Customer;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -39,6 +37,21 @@ public class TransfersServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
+        HttpSession session = request.getSession();
+
+        String username = (String) session.getAttribute("username");
+        Customer customer = new UserRepository().findByUsername(username).getCustomer();
+
+        BankAccountRepository bankAcctRepo = new BankAccountRepository();
+        List<BankAccount> bankAccounts = bankAcctRepo.findByCustomer(customer);
+        
+        request.setAttribute("bankAccounts", bankAccounts);
+        // Then display accounts information
+        String url = "/transfers.htm";
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(url);
+        dispatcher.forward(request, response);
+        
+/*
         BankAccountRepository bankAcctRepo = new BankAccountRepository();
 
         BankAccount fromAccount = bankAcctRepo.findByAccountNumber(request.getParameter("fromAccount"));
@@ -60,21 +73,7 @@ public class TransfersServlet extends HttpServlet {
         for (TransferRequest tr : requests) {
             // then display information
         }
-        
-        
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet TransfersServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet TransfersServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+    */
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

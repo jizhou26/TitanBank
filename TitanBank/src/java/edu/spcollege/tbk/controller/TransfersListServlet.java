@@ -6,11 +6,17 @@
 
 package edu.spcollege.tbk.controller;
 
+import edu.spcollege.tbk.domain.transfer.TransferService;
+import edu.spcollege.tbk.domain.transfer.TransferRequest;
 import edu.spcollege.tbk.domain.bankaccount.BankAccountRepository;
 import edu.spcollege.tbk.domain.bankaccount.BankAccount;
 import edu.spcollege.tbk.domain.user.UserRepository;
 import edu.spcollege.tbk.domain.Customer;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -23,7 +29,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author Zhou
  */
-public class AccountsServlet extends HttpServlet {
+public class TransfersListServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,21 +42,45 @@ public class AccountsServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        HttpSession session = request.getSession();
 
+        HttpSession session = request.getSession();
+        
         String username = (String) session.getAttribute("username");
         Customer customer = new UserRepository().findByUsername(username).getCustomer();
-        
-        BankAccountRepository bankAcctRepo = new BankAccountRepository();
-        List<BankAccount> bankAccounts = bankAcctRepo.findByCustomer(customer);
 
-        request.setAttribute("bankAccounts", bankAccounts);
+        BankAccountRepository bankAcctRepo = new BankAccountRepository();
+        
+        BankAccount fromAccount = bankAcctRepo.findByAccountNumber( request.getParameter("fromAccount") );
+        BankAccount toAccount = bankAcctRepo.findByAccountNumber( request.getParameter("toAccount") );
+        double amount = Double.parseDouble( request.getParameter("transferAmount") );
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        Date activeDate = null;
+        try {
+            activeDate = dateFormat.parse( request.getParameter("activeDate") );
+        } catch (ParseException ex) {
+            //...
+        } finally {
+            if (activeDate == null)
+                activeDate = new Date();
+        }
+        
+        
+        TransferService transferServ = new TransferService();
+        TransferRequest transferRequest = new TransferRequest(fromAccount, toAccount, amount, activeDate);
+        transferServ.transfer(transferRequest);
+        
+        bankAcctRepo.save(fromAccount);
+        bankAcctRepo.save(toAccount);
+        
+    
+        List<TransferRequest> transferRequests = transferServ.getTransactionsByCustomer(customer);
+        
+        request.removeAttribute("transferRequests");
+        request.setAttribute("transferRequests", transferRequests);
         // Then display accounts information
-        String url = "/accounts.htm";
+        String url = "/transfersList.htm";
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(url);
         dispatcher.forward(request, response);
-
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

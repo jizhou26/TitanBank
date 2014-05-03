@@ -3,7 +3,7 @@
     Created on : Apr 13, 2014, 3:26:06 PM
     Author     : Zhou
 --%>
-<%@page import="edu.spcollege.tbk.domain.*"%>
+<%@page import="edu.spcollege.tbk.domain.*, edu.spcollege.tbk.domain.user.*,"%>
 <%
         AuthenticationService AuthServ = new AuthenticationService(new UserRepository());
 

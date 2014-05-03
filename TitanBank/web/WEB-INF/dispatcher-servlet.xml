@@ -25,7 +25,7 @@
                 <prop key="loginError.htm">loginErrorController</prop>
                 <prop key="accounts.htm">accountsController</prop>
                 <prop key="transfers.htm">transfersController</prop>
-                <prop key="transferService.htm">transferServiceController</prop>
+                <prop key="transfersList.htm">transfersListController</prop>
             </props>
         </property>
     </bean>
@@ -62,7 +62,7 @@
           class="org.springframework.web.servlet.mvc.ParameterizableViewController"
           p:viewName="transfers" />
     
-    <bean name="transferServiceController"
+    <bean name="transfersListController"
           class="org.springframework.web.servlet.mvc.ParameterizableViewController"
-          p:viewName="transferService" />
+          p:viewName="transfersList" />
 </beans>

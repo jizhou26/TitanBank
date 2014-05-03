@@ -2,9 +2,10 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/html4/loose.dtd">
 
-<%! String username = ""; %>
+<%@page import="edu.spcollege.tbk.domain.*"%>
+<%! String customerName; %>
 <%
-    username = (String) session.getAttribute("username");
+    customerName = (String) session.getAttribute("customerName");
 %>
 
 <html>
@@ -18,7 +19,7 @@
         
         <div class="main">
             <p>You are logged In.</p>
-            <p>Welcome to Titan Bank, <%=username%></p>
+            <p>Welcome to Titan Bank, <%=customerName%></p>
         </div> <!-- class="main" -->
     
         <jsp:include page="stdfooter.jsp" />

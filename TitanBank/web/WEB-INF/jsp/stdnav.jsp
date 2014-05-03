@@ -4,16 +4,17 @@
     Author     : Zhou
 --%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
-<%! String username = ""; %>
+<%@page import="edu.spcollege.tbk.domain.*"%>
+<%! String customerName; %>
 <%
     Boolean loggedIn = (Boolean) session.getAttribute("loginStatus");
     if (loggedIn == null || !loggedIn.booleanValue()) {
+
 %>
-        <jsp:forward page="login.jsp" />
+            <jsp:forward page="login.jsp" />
 <%
     } else {
-        username = (String) session.getAttribute("username");
+        customerName = (String) session.getAttribute("customerName");
     }
 %>
 
@@ -26,7 +27,7 @@
 
         <div class="logout">
         <p class="text">
-            <a class="loginCtrl" href="login.htm"> Log Out (<%=username%>) </a>
+            <a class="loginCtrl" href="userLogin?option=logout"> Log Out (<%=customerName%>) </a>
         </p>
         </div> <!-- class="logout" -->
         </div> <!-- class="header" -->
@@ -35,7 +36,7 @@
 
         <div class="nav">
         <div class="nav1">
-            <span class="text3"><a href="accounts.htm">Accounts</a>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;<a href="transfers.htm">Transfers</a>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;<a href="">Check Manage</a>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;<a href="">Settings</a></span>
+            <span class="text3"><a href="accounts">Accounts</a>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;<a href="transfers">Transfers</a>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;<a href="">Check Manage</a>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;<a href="">Settings</a></span>
         </div> <!-- class="nav1" -->
         </div> <!-- class="nav" -->
 

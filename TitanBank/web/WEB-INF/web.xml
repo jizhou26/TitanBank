@@ -24,6 +24,10 @@
         <servlet-name>TransfersServlet</servlet-name>
         <servlet-class>edu.spcollege.tbk.controller.TransfersServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>TransfersListServlet</servlet-name>
+        <servlet-class>edu.spcollege.tbk.controller.TransfersListServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>dispatcher</servlet-name>
         <url-pattern>*.htm</url-pattern>
@@ -39,6 +43,10 @@
     <servlet-mapping>
         <servlet-name>TransfersServlet</servlet-name>
         <url-pattern>/transfers</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TransfersListServlet</servlet-name>
+        <url-pattern>/transfersList</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

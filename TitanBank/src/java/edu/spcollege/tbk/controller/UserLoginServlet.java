@@ -7,11 +7,14 @@
 package edu.spcollege.tbk.controller;
 
 
+import edu.spcollege.tbk.domain.InvalidPasswordException;
+import edu.spcollege.tbk.domain.UserNotFoundException;
+import edu.spcollege.tbk.domain.user.UserRepository;
 import edu.spcollege.tbk.domain.*;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -36,44 +39,48 @@ public class UserLoginServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        AuthenticationService AuthServ = new AuthenticationService(new UserRepository());
+        String option = request.getParameter("option");
         
         HttpSession session = request.getSession(true);
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
+        
+        String nextUrl = null;
+        
+        if (option.equals("login")) {
+            // Login
+            AuthenticationService AuthServ = new AuthenticationService(new UserRepository());
 
-        Customer loginCustomer = null;
-        try {
-            // must be user / user
-            loginCustomer = AuthServ.login(username, password);
-        } catch (UserNotFoundException | InvalidPasswordException ex) {
-            Logger.getLogger(UserLoginServlet.class.getName()).log(Level.SEVERE, null, ex.getMessage());
-            loginCustomer = null;
-        }
+            String username = request.getParameter("username");
+            String password = request.getParameter("password");
 
-        if (loginCustomer != null) {
-            session.setAttribute("username", username);
-            response.sendRedirect("index.htm");
-        } else {
-            String html = "<p>Sorry, Incorrect Password, Try Again</p>";
+            Customer loginCustomer = null;
+            try {
+                // must be user / user
+                loginCustomer = AuthServ.login(username, password);
+            } catch (UserNotFoundException | InvalidPasswordException ex) {
+                Logger.getLogger(UserLoginServlet.class.getName()).log(Level.SEVERE, null, ex.getMessage());
+                loginCustomer = null;
+            }
 
-            response.setContentType("text/html;charset=UTF-8");
-            try (PrintWriter out = response.getWriter()) {
-                /* TODO output your page here. You may use following sample code. */
-                out.println("<!DOCTYPE html>");
-                out.println("<html>");
-                out.println("<head>");
-                out.println("<title>Servlet UserLoginServlet</title>");            
-                out.println("</head>");
-                out.println("<body>");
-                //out.println("<h1>Servlet UserLoginServlet at " + request.getContextPath() + "</h1>");
-
-                out.println(html);
-
-                out.println("</body>");
-                out.println("</html>");
+            if (loginCustomer != null) {
+                session.setAttribute("loginStatus", true);
+                session.setAttribute("username", username);
+                session.setAttribute("customerName", loginCustomer.getFirstName());
+                nextUrl = "/index.htm";
+                //response.sendRedirect("index.htm");
+            } else {
+                nextUrl = "/loginError.htm";
             }
         }
+        else {
+            //Logout
+            session.removeAttribute("loginStatus");
+            session.removeAttribute("username");
+            session.removeAttribute("customerName");
+            nextUrl = "/login.htm";
+        }
+        
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextUrl);
+        dispatcher.forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

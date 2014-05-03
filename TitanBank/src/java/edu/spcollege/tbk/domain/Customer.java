@@ -6,31 +6,44 @@
 
 package edu.spcollege.tbk.domain;
 
+import java.util.Date;
+import java.util.Objects;
 
-//import java.util.Objects;
+
 
 /**
  *
  * @author Zhou
  */
-public class Customer {
-//    static private int customerId = 0;
-//    private final int id;
-    private final String firstName;
-    private final String lastName;
+public class Customer implements java.io.Serializable {
+    private Long id;
+    private String firstName;
+    private String lastName;
+    private Date dateOfBirth;
+    private String address;
+    private String email;
+    private String phone;
     
     // Constructor
-    public Customer(String firstName, String lastName) {
-//        customerId++;
-//        this.id = customerId;
+    public Customer(String firstName, String lastName, Date dateOfBirth) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.dateOfBirth = dateOfBirth;
     }
-
-    // Getter/Setter
-//    public int getId() {
-//        return this.id;
-//    }
+    
+    public Customer(String firstName, String lastName, Date dateOfBirth, String address, String email, String phone) {
+       this.firstName = firstName;
+       this.lastName = lastName;
+       this.dateOfBirth = dateOfBirth;
+       this.address = address;
+       this.email = email;
+       this.phone = phone;
+    }
+    
+    // Getter
+    public Long getId() {
+        return this.id;
+    }
     
     public String getFirstName() {
         return this.firstName;
@@ -40,10 +53,34 @@ public class Customer {
         return this.lastName;
     }
     
-    public String getFullName() {
-        return this.firstName + " " + this.lastName;
+    public Date getDateOfBirth() {
+        return this.dateOfBirth;
     }
     
+    public String getAddress() {
+        return this.address;
+    }
+    
+    public String getEmail() {
+        return this.email;
+    }
+    
+    public String getPhone() {
+        return this.phone;
+    }
+    
+    // Setter
+    public void setAddress(String address) {
+        this.address = address;
+    }
+    
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
     
     @Override
     public boolean equals(Object other) {
@@ -53,66 +90,39 @@ public class Customer {
         if (this.getClass() != other.getClass()) {
             return false;
         }
-//        return this.id == ((Customer)other).id;
-        //temp
-        return this.getFullName().equals( ((Customer)other).getFullName() );
+        return this.id.equals(((Customer)other).id);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 53 * hash + Objects.hashCode(this.id);
+        return hash;
     }
 
     
     // Method
-//    public boolean createLoginAccount(String username, String password) {
-//        if (this.loginAccount == null) {
-//            this.loginAccount = new User(this.id, username, password);
-//            return true;
-//        }
-//        return false;
-//    }
-//
-//    public double viewSavingBalance(String accountNumber) {
-//        return this.bankAccounts.getSavingBalance(accountNumber);
-//    }
-//    
-//    public double viewCheckingBalance(String accountNumber) {
-//        return this.bankAccounts.getCheckingBalance(accountNumber);
-//    }
-//    
-//    public String[][] viewTransferRecords() {
-//        return this.transferRecords.getRecordsData();
-//    }
-//    
-//    public boolean transferFunds(String fromAccountNumber,
-//                                   BankAccountType fromType,
-//                                   String toAccountNumber,
-//                                   BankAccountType toType,
-//                                   double amount,
-//                                   Date activeDate)
-//    {
-//        BankAccount fromAccount;
-//        BankAccount toAccount;
-//
-//        if (fromType == BankAccountType.Saving) {
-//            fromAccount = this.bankAccounts.getSavingAccount(fromAccountNumber);
-//        } else {
-//            fromAccount = this.bankAccounts.getCheckingAccount(fromAccountNumber);
-//        }
-//        
-//        if (toType == BankAccountType.Saving) {
-//            toAccount = this.bankAccounts.getSavingAccount(toAccountNumber);
-//        } else {
-//            toAccount = this.bankAccounts.getCheckingAccount(toAccountNumber);
-//        }
-//
-//        if (fromAccount == null || toAccount == null) {
-//            return false;
-//        }
-//        
-//        TransferActivity transferAct = new TransferActivity(this.id, fromAccount, toAccount, amount, activeDate);
-//        if (transferAct.isReadyToTransfer()) {
-//            transferAct.transfer();
-//        }
-//        this.transferRecords.addRecord(transferAct);
-//
-//        return true;
-//    }
+    public String getFullName() {
+        return this.firstName + " " + this.lastName;
+    }
+
+    // Needed by Hibernate
+    private Customer() {
+    }
     
+    private void setId(Long id) {
+        this.id = id;
+    }
+
+    private void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    private void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    private void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
 }
